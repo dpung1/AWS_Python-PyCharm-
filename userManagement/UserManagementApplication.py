@@ -2,8 +2,9 @@ from userManagement.view.ClearView import clear
 
 def main():
     from userManagement.view.MenuView import MenuView
-    while(MenuView.index()):
-        clear()
+    while MenuView.index():
+        pass
+        # clear()
 
 if __name__ == "__main__":
     main()

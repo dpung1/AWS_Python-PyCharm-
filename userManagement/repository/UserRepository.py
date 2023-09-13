@@ -64,7 +64,7 @@ class UserRepository:
             where
                 username = %s
             """
-            cursor.execute(sql, (username))
+            cursor.execute(sql, username)
             rs = cursor.fetchone()
             return rs
 
@@ -100,7 +100,6 @@ class UserRepository:
 
     @staticmethod
     def deleteUser(userId = None):
-        print(userId)
         try:
             connection = DataBaseConfig.getConnection()
             cursor = connection.cursor(pymysql.cursors.DictCursor)
@@ -109,13 +108,13 @@ class UserRepository:
             from user_tb
             where user_id = %s
             """
-            cursor.execute(sql, (userId))
-            rs = cursor.fetchone()
-            return rs
+            deleteConut = cursor.execute(sql, userId)
+            connection.commit()
+            return deleteConut
 
         except Exception as e:
             print(e)
-            return None
+            return 0
 
 
 # if __name__ == '__main__':
