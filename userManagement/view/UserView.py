@@ -34,6 +34,7 @@ class UserView:
             df = pd.DataFrame(response.body)
             print("[ 전체 사용자 정보 조회 ]")
             print(df)
+            print("========<< 조회 성공 >>========")
 
         else:
             print("조회 할 데이터가 없습니다.")
@@ -42,44 +43,47 @@ class UserView:
     def showFindUser():
         print("[ username으로 사용자 정보 검색 ]")
 
-        username = input("검색하실 사용자 이름을 입력하세요. >>>")
+        username = input("검색하실 사용자 이름을 입력하세요. >>> ")
 
         response = UserController.getUser(username)
         if bool(response.body):
             ps = pd.Series(response.body)
+            print("[ 입력하신 userId의 사용자 정보 ]")
             print(ps)
+            print("========<< 조회 성공 >>========")
 
         else:
             print("조회 할 데이터가 없습니다.")
 
     @staticmethod
     def updateUser():
-        print("[ 사용자 정보 수정 ]")
+        while True:
+            print("[ 사용자 정보 수정 ]")
 
-        response = UserController.getUsersAll()
-        if not bool(response.body):
-            print("수정 할 사용자 정보가 없습니다.")
-            return
-
-        df = pd.DataFrame(response.body)
-        print(df)
-
-        userId = input("수정하실 userId를 입력하세요 >>>")
-
-        try:
-            index = df.index[df["userId"] == int(userId)].values[0]
-            user = UserView.showUpdateMenu(response.body[index])
-            if not bool(user):
-                print("수정을 취소하였습니다.")
+            response = UserController.getUsersAll()
+            if not bool(response.body):
+                print("수정 할 사용자 정보가 없습니다.")
                 return
 
-            response = UserController.updateUser(user)
-            if bool(response.body):
-                print("========<< 수정 완료 >>========")
+            df = pd.DataFrame(response.body)
+            print(df)
 
-        except Exception as e:
-            print(e)
-            print("해당 userId는 존재하지 않습니다.")
+            userId = input("수정하실 userId를 입력하세요 >>> ")
+
+            try:
+                index = df.index[df["userId"] == int(userId)].values[0]
+                user = UserView.showUpdateMenu(response.body[index])
+                if not bool(user):
+                    print("수정을 취소하였습니다.")
+                    return
+
+                response = UserController.updateUser(user)
+                if bool(response.body):
+                    print("========<< 수정 완료 >>========")
+
+            except Exception as e:
+                print(e)
+                print("해당 userId는 존재하지 않습니다.")
 
 
     @staticmethod
@@ -154,41 +158,41 @@ class UserView:
 
     @staticmethod
     def deleteUser():
-        print("[ 사용자 정보 ]")
-        response = UserController.getUsersAll()
+        while True:
+            print("[ 사용자 정보 ]")
+            response = UserController.getUsersAll()
 
-        if not bool(response.body):
-            print("삭제 할 사용자 정보가 없습니다.")
-            return
+            if not bool(response.body):
+                print("삭제 할 사용자 정보가 없습니다.")
+                return
 
-        df = pd.DataFrame(response.body)
-        print(df)
+            df = pd.DataFrame(response.body)
+            print(df)
 
-        userId = input("삭제 하실 userId를 입력하세요. >>>")
+            userId = input("삭제 하실 userId를 입력하세요. >>> ")
 
-        try:
-            index = df.index[df["userId"] == int(userId)].values[0]
-            print(df.loc[index])
+            try:
+                index = df.index[df["userId"] == int(userId)].values[0]
+                print("[ 입력하신 userId의 사용자 정보 ]")
+                print(df.iloc[index])
 
-            while True:
-                checkDelete = input("정말로 삭제 하시겠습니까? (y/n) >>>")
-                if checkDelete == "y":
-                    response = UserController.deleteUser(userId)
-                    if bool(response.body):
-                        print("========<< 삭제 완료 >>========")
-                        return None
-                elif checkDelete == "n":
-                    print("삭제가 취소되었습니다.")
-                    return None
-                else:
-                    print("다시 입력해 주세요.")
-                    continue
 
-            return None
+                while True:
+                    checkDelete = input("정말로 삭제 하시겠습니까? (y/n) >>> ")
+                    if checkDelete == "y":
+                        response = UserController.deleteUser(userId)
+                        if bool(response.body):
+                            print("========<< 삭제 완료 >>========")
+                            return True
+                    elif checkDelete == "n":
+                        print("삭제가 취소되었습니다.")
+                        return False
+                    else:
+                        print("y/n 으로 입력해주세요.")
 
-        except Exception as e:
-            print(e)
-            print("해당 userId는 존재하지 않습니다.")
+            except Exception as e:
+                print(e)
+                print("해당 userId는 존재하지 않습니다.")
 
 
 
