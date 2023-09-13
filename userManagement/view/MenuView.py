@@ -1,3 +1,4 @@
+from userManagement.view.UserView import UserView
 class MenuView:
 
     @staticmethod
@@ -14,16 +15,15 @@ class MenuView:
         if select == "q":
             return False
         elif select == "1":
-            pass
+            UserView.showAllUser()
         elif select == "2":
-            pass
+            UserView.showFindUser()
         elif select == "3":
-            from userManagement.view.RegisterUserView import RegisterUserView
-            RegisterUserView.register()
+            UserView.register()
         elif select == "4":
-            pass
+            UserView.updateUser()
         elif select == "5":
-            pass
+            UserView.deleteUser()
         else:
             print("선택하신 번호는 등록되지 않은 메뉴입니다.")
 
